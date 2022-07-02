@@ -44,4 +44,4 @@ instance Show Year where
 -- Empty module list creates a year with 0 weight and 0 mark
 makeYear :: [Module] -> Float -> Year
 makeYear [] weight = Year [] 0 0
-makeYear ms weight = Year ms weight (sum [ mMark m | m <- ms] / fromIntegral (length ms))
+makeYear ms weight = Year ms weight (sum [ (mWeight m / 100) * mMark m | m <- ms])

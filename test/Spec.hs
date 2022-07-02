@@ -33,9 +33,6 @@ prop_makeModule name cws weight = mMark m == sum [ (cwWeight cw / 100) * cwMark 
         m = makeModule name cws weight
 
 prop_makeYear :: [Module] -> Float -> Bool
-prop_makeYear [] weight = yMark y == 0
-    where
-        y = makeYear [] weight
-prop_makeYear ms weight = yMark y == sum [ mMark m | m <- ms] / fromIntegral (length ms)
+prop_makeYear ms weight = yMark y == sum [ (mWeight m / 100) * mMark m | m <- ms]
     where
         y = makeYear ms weight
