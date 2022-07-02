@@ -1,37 +1,40 @@
 module Main where
 
-import Lib
-    ( makeCoursework, makeModule, makeYear, Coursework, Module, Year )
-import Control.Monad (replicateM)
+import qualified Graphics.UI.Threepenny as UI
+import Graphics.UI.Threepenny.Core
+import Graphics.UI.Threepenny.Widgets
 
-genCoursework :: IO Coursework
-genCoursework = do
-    putStrLn "Enter coursework name: "
-    name <- getLine
-    putStrLn "Enter coursework weight: "
-    weight <- getLine
-    putStrLn "Enter coursework mark: "
-    makeCoursework name (read weight) . read <$> getLine
-
-genModule :: IO Module
-genModule = do
-    putStrLn "Enter module name: "
-    name <- getLine
-    putStrLn "Enter module weight: "
-    weight <- getLine
-    putStrLn "Enter number of courseworks: "
-    numCourseworks <- getLine
-    courseworks <- replicateM (read numCourseworks) genCoursework
-    return (makeModule name courseworks (read weight))
-
-genYear :: IO Year
-genYear = do
-    putStrLn "Enter weight of year: "
-    weight <- getLine
-    putStrLn "Enter number of modules: "
-    numModules <- getLine
-    modules <- replicateM (read numModules) genModule
-    return (makeYear modules (read weight))
+import CLI ( cliMain )
+import Control.Monad (void)
 
 main :: IO ()
-main = genYear >>= print
+main = do
+    startGUI defaultConfig {
+        jsPort = Just 8080 
+    } setup
+
+setup :: Window -> UI ()
+setup window = do
+    return window # set title "Module Calculator"
+    mkReactiveTextField window "test"
+    return ()
+
+mkReactiveTextField :: Window -> String -> UI Element
+mkReactiveTextField window labelString = do
+
+    label <- UI.p # set text labelString                -- Create paragraph label
+    input <- UI.input # set value ""                    -- Create input field
+    div <- UI.div #+ [element label, element input]     -- Create div container
+    getBody window #+ [element div]                     -- Add div to body
+
+    on UI.keyup input $ \keyCode -> do                  -- When input field is changed
+        if keyCode == 13 then do                        -- If enter key is pressed
+            val <- get value input                      -- Get value of input field
+            div' <- mkReactiveTextField window val      -- Create new div
+            delete div                                  -- Delete old div
+            return div'                                 -- Return new div
+        else 
+            return div                                  -- Return div container 
+
+    return div                                          -- Return div container
+

@@ -38,6 +38,7 @@ library
 executable moduleCalc-exe
   main-is: Main.hs
   other-modules:
+      CLI
       Paths_moduleCalc
   hs-source-dirs:
       app

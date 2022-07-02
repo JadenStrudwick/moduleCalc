@@ -1,25 +1,22 @@
 import Test.QuickCheck
-import Lib 
+import Lib
 
 instance Arbitrary Coursework where
     arbitrary = do
         name <- arbitrary
         weight <- arbitrary
-        mark <- arbitrary
-        return $ makeCoursework name weight mark
+        makeCoursework name weight <$> arbitrary
 
 instance Arbitrary Module where
     arbitrary = do
         name <- arbitrary
         cws <- arbitrary
-        weight <- arbitrary
-        return $ makeModule name cws weight
+        makeModule name cws <$> arbitrary
 
 instance Arbitrary Year where
     arbitrary = do
         modules <- arbitrary
-        weight <- arbitrary
-        return $ makeYear modules weight
+        makeYear modules <$> arbitrary
 
 main :: IO ()
 main = do

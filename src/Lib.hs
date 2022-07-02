@@ -8,7 +8,7 @@ data Coursework = Coursework {
 }
 
 instance Show Coursework where
-    show c = " - " ++ cwName c ++ " (" ++ show (cwWeight c) ++ "% weight): " ++ show (cwMark c) ++ "%"
+    show c = " - " ++ cwName c ++ " (" ++ show (cwWeight c) ++ "% of module): " ++ show (cwMark c) ++ "%"
 
 makeCoursework :: String -> Float -> Float -> Coursework
 makeCoursework = Coursework
@@ -22,7 +22,7 @@ data Module = Module {
 }
 
 instance Show Module where
-    show m = "Module name: " ++ mName m ++ " (" ++ show (mWeight m) ++ "% weight): " ++ " \n" ++ unlines (map show (mCws m) )++ " Module percent: " ++ show (mMark m) ++ "% \n"
+    show m = "Module name: " ++ mName m ++ " (" ++ show (mWeight m) ++ "% of year): " ++ " \n" ++ unlines (map show (mCws m) )++ " Module percent: " ++ show (mMark m) ++ "% \n"
 
 -- | Smart constructor for Module data type
 -- Empty coursework list creates a module with 0 weight and 0 mark
@@ -38,7 +38,7 @@ data Year = Year {
 }
 
 instance Show Year where
-    show y = unlines (map show (yMs y)) ++ "Year percent (" ++ show (yWeight y) ++ "% weight): " ++ show (yMark y) ++ "% \n"
+    show y = unlines (map show (yMs y)) ++ "Year percent (" ++ show (yWeight y) ++ "% degree): " ++ show (yMark y) ++ "% \n"
 
 -- | Smart constructor for Year data type
 -- Empty module list creates a year with 0 weight and 0 mark
