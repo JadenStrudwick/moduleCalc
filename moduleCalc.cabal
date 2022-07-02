@@ -6,12 +6,12 @@ cabal-version: 1.12
 
 name:           moduleCalc
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/githubuser/moduleCalc#readme>
-homepage:       https://github.com/githubuser/moduleCalc#readme
-bug-reports:    https://github.com/githubuser/moduleCalc/issues
-author:         Author name here
-maintainer:     example@example.com
-copyright:      2022 Author name here
+description:    Please see the README on GitHub at <https://github.com/JadenStrudwick/moduleCalc#readme>
+homepage:       https://github.com/strudjay/moduleCalc#readme
+bug-reports:    https://github.com/strudjay/moduleCalc/issues
+author:         Jaden Strudwick
+maintainer:     strudjay@gmail.com
+copyright:      2022 Jaden Strudwick
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
@@ -21,7 +21,7 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/moduleCalc
+  location: https://github.com/strudjay/moduleCalc
 
 library
   exposed-modules:
@@ -32,6 +32,7 @@ library
       src
   build-depends:
       base >=4.7 && <5
+    , threepenny-gui
   default-language: Haskell2010
 
 executable moduleCalc-exe
@@ -44,6 +45,7 @@ executable moduleCalc-exe
   build-depends:
       base >=4.7 && <5
     , moduleCalc
+    , threepenny-gui
   default-language: Haskell2010
 
 test-suite moduleCalc-test
@@ -57,4 +59,5 @@ test-suite moduleCalc-test
   build-depends:
       base >=4.7 && <5
     , moduleCalc
+    , threepenny-gui
   default-language: Haskell2010

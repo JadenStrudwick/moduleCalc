@@ -1,4 +1,4 @@
-module Lib (Coursework, makeCoursework, Module, makeModule, Year, makeYear) where
+module Lib where
 
 -- | Coursework data type
 data Coursework = Coursework {
@@ -8,13 +8,10 @@ data Coursework = Coursework {
 }
 
 instance Show Coursework where
-    show (Coursework name weight mark) = " - " ++ name ++ " (" ++ show weight ++ "% weight): " ++ show mark ++ "%"
+    show c = " - " ++ cwName c ++ " (" ++ show (cwWeight c) ++ "% weight): " ++ show (cwMark c) ++ "%"
 
 makeCoursework :: String -> Float -> Float -> Coursework
-makeCoursework name weight mark = Coursework name weight mark
-
-testCoursework :: Coursework
-testCoursework = makeCoursework "Test Coursework" 50 70
+makeCoursework = Coursework
 
 -- | Module data type
 data Module = Module {
@@ -25,13 +22,10 @@ data Module = Module {
 }
 
 instance Show Module where
-    show (Module name courseworks weight mark) = "Module name: " ++ name ++ " (" ++ show weight ++ "% weight): " ++ " \n" ++ unlines (map show courseworks) ++ " Module percent: " ++ show mark ++ "% \n"
+    show m = "Module name: " ++ moduleName m ++ " (" ++ show (moduleWeight m) ++ "% weight): " ++ " \n" ++ unlines (map show (courseworks m) )++ " Module percent: " ++ show (moduleMark m) ++ "% \n"
 
 makeModule :: String -> [Coursework] -> Float -> Module
-makeModule name courseworks weight = Module name courseworks weight (sum [ (cwWeight cw / 100) * cwMark cw | cw <- courseworks])
-
-testModule :: Module
-testModule = makeModule "Test Module" [testCoursework, testCoursework] 0.25
+makeModule name cws weight = Module name cws weight (sum [ (cwWeight cw / 100) * cwMark cw | cw <- cws])
 
 -- | Year data type
 data Year = Year {
@@ -41,10 +35,7 @@ data Year = Year {
 }
 
 instance Show Year where
-    show (Year modules weight mark) = unlines (map show modules) ++ "Year percent: (" ++ show weight ++ "% weight): " ++ show mark ++ "% \n"
+    show y = unlines (map show (modules y)) ++ "Year percent: (" ++ show (yearWeight y) ++ "% weight): " ++ show (yearMark y) ++ "% \n"
 
 makeYear :: [Module] -> Float -> Year
-makeYear modules weight = Year modules weight (sum [moduleMark m | m <- modules] / (fromIntegral (length modules)))
-
-testYear :: Year
-testYear = makeYear [testModule, testModule, testModule, testModule] 0.10
+makeYear ms weight = Year ms weight (sum [moduleMark m | m <- ms] / fromIntegral (length ms))

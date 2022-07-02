@@ -1,6 +1,7 @@
 module Main where
-    
+
 import Lib
+    ( makeCoursework, makeModule, makeYear, Coursework, Module, Year )
 import Control.Monad (replicateM)
 
 genCoursework :: IO Coursework
@@ -10,8 +11,7 @@ genCoursework = do
     putStrLn "Enter coursework weight: "
     weight <- getLine
     putStrLn "Enter coursework mark: "
-    mark <- getLine
-    return (makeCoursework name (read weight) (read mark))
+    makeCoursework name (read weight) . read <$> getLine
 
 genModule :: IO Module
 genModule = do
