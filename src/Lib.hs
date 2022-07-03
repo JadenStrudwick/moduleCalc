@@ -1,47 +1,62 @@
 module Lib where
 
+import Data.Maybe
+
 -- | Coursework data type
 data Coursework = Coursework {
-    cwName      :: String,
-    cwWeight    :: Float,
-    cwMark      :: Float
+    cwName      :: Maybe String,
+    cwWeight    :: Maybe Float,
+    cwMark      :: Maybe Float
 }
 
-instance Show Coursework where
-    show c = " - " ++ cwName c ++ " (" ++ show (cwWeight c) ++ "% of module): " ++ show (cwMark c) ++ "%"
-
 makeCoursework :: String -> Float -> Float -> Coursework
-makeCoursework = Coursework
+makeCoursework name weight mark = Coursework {
+    cwName      = Just name,
+    cwWeight    = Just weight,
+    cwMark      = Just mark
+}
 
 -- | Module data type
 data Module = Module {
-    mName      :: String,
+    mName      :: Maybe String,
     mCws       :: [Coursework],
-    mWeight    :: Float,
-    mMark      :: Float
+    mWeight    :: Maybe Float,
+    mMark      :: Maybe Float
 }
-
-instance Show Module where
-    show m = "Module name: " ++ mName m ++ " (" ++ show (mWeight m) ++ "% of year): " ++ " \n" ++ unlines (map show (mCws m) )++ " Module percent: " ++ show (mMark m) ++ "% \n"
 
 -- | Smart constructor for Module data type
 -- Empty coursework list creates a module with 0 weight and 0 mark
 makeModule :: String -> [Coursework] -> Float -> Module
-makeModule name [] weight = Module name [] 0 0
-makeModule name cws weight = Module name cws weight (sum [ (cwWeight cw / 100) * cwMark cw | cw <- cws])
+makeModule name [] weight = Module {
+    mName      = Just name,
+    mCws       = [],
+    mWeight    = Just 0,
+    mMark      = Just 0
+}
+makeModule name cws weight = Module {
+    mName      = Just name,
+    mCws       = cws,
+    mWeight    = Just weight,
+    mMark      = Just $ sum [ ( fromMaybe 0 (cwWeight cw) / 100) * fromMaybe 0 (cwMark cw) | cw <- cws ]
+}
 
 -- | Year data type
 data Year = Year {
     yMs         :: [Module],
-    yWeight     :: Float,
-    yMark       :: Float
+    yWeight     :: Maybe Float,
+    yMark       :: Maybe Float
 }
-
-instance Show Year where
-    show y = unlines (map show (yMs y)) ++ "Year percent (" ++ show (yWeight y) ++ "% degree): " ++ show (yMark y) ++ "% \n"
 
 -- | Smart constructor for Year data type
 -- Empty module list creates a year with 0 weight and 0 mark
 makeYear :: [Module] -> Float -> Year
-makeYear [] weight = Year [] 0 0
-makeYear ms weight = Year ms weight (sum [ (mWeight m / 100) * mMark m | m <- ms])
+makeYear [] weight = Year {
+    yMs         = [],
+    yWeight     = Just 0,
+    yMark       = Just 0
+}
+makeYear ms weight = Year {
+    yMs         = ms,
+    yWeight     = Just weight,
+    yMark       = Just $ sum [ ( fromMaybe 0 (mWeight m) / 100) * fromMaybe 0 (mMark m) | m <- ms ]
+}
