@@ -14,10 +14,11 @@ main = do
 setup :: Window -> UI ()
 setup window = do
     _ <- return window # set title "Module Calculator"
-    mkCourseworkComponent window (makeCoursework "TestCoursework" 20 70)
     return ()
 
 -- Courseworks also do not save their state
+-- Add keys to each data type, allowing them to be found and updated
+
 
 mkNameInput :: Maybe String -> String -> UI Element
 mkNameInput (Just name) hint = UI.input # set (attr "placeholder") hint # set value name
@@ -35,14 +36,15 @@ mkDivBoxAndAddToWindow window elements = do
 
 mkCourseworkComponent :: Window -> Coursework -> UI Element
 mkCourseworkComponent window c = do
-    name <- mkNameInput (cwName c) "Coursework name"
-    weight <- mkNumberInput (cwWeight c) "Coursework weight"
-    mark <- mkNumberInput (cwMark c) "Coursework mark"
+    name <- mkNameInput (cName c) "Coursework name"
+    weight <- mkNumberInput (cWeight c) "Coursework weight"
+    mark <- mkNumberInput (cMark c) "Coursework mark"
     mkDivBoxAndAddToWindow window [name, weight, mark]
 
-mkModuleComponent :: Window -> Module -> UI Element
-mkModuleComponent window m = do
-    name <- mkNameInput (mName m) "Module name"
-    weight <- mkNumberInput (mWeight m) "Module weight"
+mkNodeComponent :: Window -> Node a -> UI Element
+mkNodeComponent window n = do
+    name <- mkNameInput (nName n) "Module name"
+    weight <- mkNumberInput (nWeight n) "Module weight"
     mkDivBoxAndAddToWindow window [name, weight]
+
 
