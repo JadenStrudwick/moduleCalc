@@ -1,7 +1,6 @@
 module Lib where
 
-type NameWeight = (Maybe String, Maybe Float)
-
+-- | Data types 
 data Coursework = Coursework {
     cName        :: Maybe String,
     cWeight      :: Maybe Float,
@@ -20,34 +19,39 @@ type Module = Node Coursework
 type Year   = Node Module
 type Degree = [Year]
 
--- This should be good enough and then have a calculate button
+-- | Smart constructors
+makeValidWeightMark :: Maybe Float -> Maybe Float
+makeValidWeightMark Nothing = Nothing
+makeValidWeightMark (Just x)
+    | x < 0 || x > 100 = Nothing
+    | otherwise = Just x
 
-sumMaybes :: (Num a) => [Maybe a] -> Maybe a
-sumMaybes = fmap sum . sequence
+mkCoursework :: Maybe String -> Maybe Float -> Maybe Float -> Coursework
+mkCoursework name weight mark = Coursework name (makeValidWeightMark weight) (makeValidWeightMark mark)
 
-calculateCourseworkMark :: Coursework -> Maybe Float
-calculateCourseworkMark c = do
-    weightPercent <- cWeight c
-    let weight = weightPercent / 100
-    mark   <- cMark c
-    return $ mark * weight
+mkNode :: Maybe String -> Maybe Float -> [a] -> Node a
+mkNode name weight = Node name (makeValidWeightMark weight)
 
-calculateModuleMark :: Module -> Maybe Float
-calculateModuleMark (Node _ _ []) = Nothing
-calculateModuleMark m = do
-    weightPercent <- nWeight m
-    let weight = weightPercent / 100
-    cwsMarks <- mapM calculateCourseworkMark (nCont m)
-    return $ sum cwsMarks * weight
+-- | Helper functions
+class Uni a where
+    calculateMark :: a -> Maybe Float
 
-calculateYearMark :: Year -> Maybe Float
-calculateYearMark (Node _ _ []) = Nothing
-calculateYearMark y = do
-    weightPercent <- nWeight y
-    let weight = weightPercent / 100
-    ms <- mapM calculateModuleMark (nCont y)
-    return $ sum ms * weight
+instance Uni Coursework where
+    calculateMark c =  do
+        weightPercent <- cWeight c
+        let weight = weightPercent / 100
+        mark   <- cMark c
+        return $ mark * weight
 
-calculateDegreeMark :: Degree -> Maybe Float
-calculateDegreeMark [] = Nothing
-calculateDegreeMark ys = sumMaybes $ fmap calculateYearMark ys
+instance (Uni a) => Uni (Node a) where
+    calculateMark (Node _ _ []) = Nothing
+    calculateMark m = do
+        weightPercent <- nWeight m
+        let weight = weightPercent / 100
+        cwsMarks <- mapM calculateMark (nCont m)
+        return $ sum cwsMarks * weight
+
+instance (Uni a) => Uni [a] where
+    calculateMark [] = Nothing
+    calculateMark ys = sumMaybes $ fmap calculateMark ys
+        where sumMaybes = fmap sum . sequence

@@ -16,10 +16,6 @@ setup window = do
     _ <- return window # set title "Module Calculator"
     return ()
 
--- Courseworks also do not save their state
--- Add keys to each data type, allowing them to be found and updated
-
-
 mkNameInput :: Maybe String -> String -> UI Element
 mkNameInput (Just name) hint = UI.input # set (attr "placeholder") hint # set value name
 mkNameInput Nothing hint = UI.input # set (attr "placeholder") hint # set value ""
