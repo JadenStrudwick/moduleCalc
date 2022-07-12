@@ -33,15 +33,14 @@ library
   build-depends:
       base >=4.7 && <5
     , containers
+    , gi-gtk
     , hashable
-    , threepenny-gui
     , unordered-containers
   default-language: Haskell2010
 
 executable moduleCalc-exe
   main-is: Main.hs
   other-modules:
-      CLI
       Paths_moduleCalc
   hs-source-dirs:
       app
@@ -49,9 +48,9 @@ executable moduleCalc-exe
   build-depends:
       base >=4.7 && <5
     , containers
+    , gi-gtk
     , hashable
     , moduleCalc
-    , threepenny-gui
     , unordered-containers
   default-language: Haskell2010
 
@@ -68,8 +67,8 @@ test-suite moduleCalc-test
       QuickCheck
     , base >=4.7 && <5
     , containers
+    , gi-gtk
     , hashable
     , moduleCalc
-    , threepenny-gui
     , unordered-containers
   default-language: Haskell2010
