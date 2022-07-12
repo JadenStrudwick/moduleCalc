@@ -24,6 +24,8 @@ dependencies:
 - hashable
 - gi-gtk
 - haskell-gi-base
+- gi-gtk-declarative
+- gi-gtk-declarative-app-simple
 - containers
 - unordered-containers
 
